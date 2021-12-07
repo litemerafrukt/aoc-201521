@@ -1,12 +1,10 @@
-const R = require("ramda");
-const { _, it } = require("param.macro");
+const { items } = require("./items");
+const { equipmentSets } = require("./equipmentSets");
 
 function main() {
-  "Hello," |> console.log(_, "world!");
+  const allSets = equipmentSets(items);
 
-  [1, 2, 3] |> R.sum |> console.log;
-
-  3 |> [it, it, it] |> R.sum |> console.log;
+  console.log(allSets);
 }
 
 main();
