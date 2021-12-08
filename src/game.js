@@ -12,7 +12,6 @@ const isGameOver = (fighterOne, fighterTwo) =>
 const takeTurns = (hitter, punched) => {
   const [toBePunched, nextToHit] = turn(hitter, punched);
 
-  console.log({ toBePunched, nextToHit });
   if (isGameOver(toBePunched, nextToHit)) {
     return isDead(nextToHit) ? toBePunched : nextToHit;
   }
