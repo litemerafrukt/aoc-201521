@@ -1,36 +1,28 @@
+const { cartesian } = require("./cartesian");
+const R = require("ramda");
+
 const equipmentSets = ({ weapons, armors, rings }) =>
-  weapons
-    .map(wpn => {
-      return [
-        { weapon: wpn },
-        rings.map(rng1 => {
-          return [
-            { weapon: wpn, rings: [rng1] },
-            rings
-              .filter(rng2 => rng2 !== rng1)
-              .map(rng2 => {
-                return { weapon: wpn, rings: [rng1, rng2] };
-              }),
-          ];
-        }),
-        armors.map(arm => {
-          return [
-            { weapon: wpn, armor: arm },
-            rings.map(rng1 => {
-              return [
-                { weapon: wpn, armor: arm, rings: [rng1] },
-                rings
-                  .filter(rng2 => rng2 !== rng1)
-                  .map(rng2 => {
-                    return { weapon: wpn, armor: arm, rings: [rng1, rng2] };
-                  }),
-              ];
-            }),
-          ];
-        }),
-      ];
-    })
-    .flat(Infinity);
+  cartesian([
+    weapons,
+    [undefined, ...armors],
+    [undefined, ...rings],
+    [undefined, ...rings],
+  ])
+    .filter(
+      ([, , ring1, ring2]) =>
+        ring1 === undefined || ring2 === undefined || ring1 !== ring2,
+    )
+    .map(set => {
+      const [weapon, armor, ring1, ring2] = set;
+      const rings = [ring1, ring2].filter(Boolean);
+      const hasRing = rings.length > 0;
+
+      return {
+        weapon,
+        ...(armor && { armor }),
+        ...(hasRing && { rings }),
+      };
+    }) |> R.uniq;
 
 const calculateCostOfSet = set =>
   set.weapon.cost +
@@ -41,4 +33,4 @@ const sortEquipmentSets = sets =>
   [...sets].sort((a, b) => calculateCostOfSet(a) - calculateCostOfSet(b));
 
 /* eslint-disable-next-line */
-module.exports = { equipmentSets, sortEquipmentSets };
+module.exports = { equipmentSets, calculateCostOfSet, sortEquipmentSets };

@@ -20,22 +20,10 @@ describe("equipmentSets", () => {
     const rings = ["golden ring"];
 
     expect(equipmentSets({ weapons, armors, rings })).toIncludeSameMembers([
-      {
-        weapon: "dagger",
-      },
-      {
-        armor: "ringmail",
-        weapon: "dagger",
-      },
-      {
-        armor: "ringmail",
-        rings: ["golden ring"],
-        weapon: "dagger",
-      },
-      {
-        rings: ["golden ring"],
-        weapon: "dagger",
-      },
+      { weapon: "dagger" },
+      { rings: ["golden ring"], weapon: "dagger" },
+      { armor: "ringmail", weapon: "dagger" },
+      { armor: "ringmail", rings: ["golden ring"], weapon: "dagger" },
     ]);
   });
 });

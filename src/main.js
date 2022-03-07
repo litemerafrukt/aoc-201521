@@ -1,12 +1,41 @@
-const R = require("ramda");
-const { _, it } = require("param.macro");
+const { items } = require("./items");
+const { calculateCostOfSet } = require("./equipmentSets");
+const { generatePlayers, findFirstWinningPlayer } = require("./dungeon");
+const { createBoss } = require("./fighter");
 
 function main() {
-  "Hello," |> console.log(_, "world!");
+  const players = generatePlayers(items);
+  console.log("Sending", players.length, "players to the dungeon.\n");
 
-  [1, 2, 3] |> R.sum |> console.log;
+  const [playerIndex, player] = findFirstWinningPlayer(
+    players,
+    createBoss(100, 8, 2),
+  );
 
-  3 |> [it, it, it] |> R.sum |> console.log;
+  if (!player) {
+    console.log("Boss won all fights.");
+  } else {
+    console.log(
+      "Player number",
+      playerIndex,
+      "was the first to win against the boss.",
+    );
+    console.log("Equipment cost:", calculateCostOfSet(player), "gold.");
+    console.log(
+      "Equipment:",
+      JSON.stringify(
+        {
+          weapon: player.weapon,
+          armor: player.armor,
+          rings: player.rings ?? [],
+        },
+        null,
+        2,
+      ),
+    );
+  }
+
+  console.log("\nThe end!");
 }
 
 main();
